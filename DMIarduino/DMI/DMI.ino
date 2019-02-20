@@ -1,4 +1,4 @@
-volatile byte U18pulse;
+volatile unsigned long U18pulse;
 String command;
 unsigned long previousMillis = 0; // last time update
 long interval = 150; // interval at which to do something (milliseconds)
