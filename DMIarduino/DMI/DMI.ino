@@ -42,11 +42,11 @@ void setup() {
   ble.info();
   ble.verbose(false);  // debug info is a little annoying after this point!
   ble.setMode(BLUEFRUIT_MODE_DATA);
-   
 }
 
 void loop() {
-  if((millis() - previousMillis > sendInterval) && !countHold) {
+  //if((millis() - previousMillis > sendInterval) && !countHold) {
+  if((millis() - previousMillis > sendInterval)) {
     // Seems this works best to send string in one packet.
     previousMillis = millis();
     ble.print("{");  
@@ -62,6 +62,7 @@ void loop() {
     switch (c) {
       case 99:
         U18pulse=0;
+        break;
       case 114:
         countHold=false;
         break;
