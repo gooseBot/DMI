@@ -16,6 +16,7 @@ String command;
 unsigned long previousMillis = 0; // last time update
 long sendInterval = 150; // interval at which to do something (milliseconds)
 int led = LED_BUILTIN;
+boolean countHold=true;
 
 void error(const __FlashStringHelper*err) {
   while (1);
@@ -45,8 +46,7 @@ void setup() {
 }
 
 void loop() {
-  //unsigned long currentMillis = millis();
-  if(millis() - previousMillis > sendInterval) {
+  if((millis() - previousMillis > sendInterval) && !countHold) {
     // Seems this works best to send string in one packet.
     previousMillis = millis();
     ble.print("{");  
@@ -59,7 +59,18 @@ void loop() {
   while ( ble.available() )
   {
     int c = ble.read();
-      U18pulse=0;
+    switch (c) {
+      case 99:
+        U18pulse=0;
+      case 114:
+        countHold=false;
+        break;
+      case 115:
+        countHold=true;
+        break;
+      default:
+        break;
+    }
   }
   
 //  if(Serial.available()){
@@ -76,8 +87,10 @@ void loop() {
  
 void magnet_detect()//This function is called whenever a magnet/interrupt is detected by the arduino
 {
-   U18pulse++;
-   //Serial.println(U18pulse);
+   if (!countHold) {
+    U18pulse++;
+    //Serial.println(U18pulse);
+   }
 }
 
 void myDelay(int mseconds) {
